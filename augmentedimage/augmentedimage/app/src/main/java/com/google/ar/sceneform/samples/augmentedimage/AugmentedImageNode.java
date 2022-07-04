@@ -85,26 +85,26 @@ public class AugmentedImageNode extends AnchorNode {
   public Navigation Map;
   public AugmentedImageNode(Context context) {
     // Upon construction, start loading the models for the corners of the frame.
-    if (ulCorner == null) {
-      ulCorner =
-          ModelRenderable.builder()
-              .setSource(context, Uri.parse("models/frame_upper_left.sfb"))
-              .build();
-      urCorner =
-          ModelRenderable.builder()
-              .setSource(context, Uri.parse("models/frame_upper_right.sfb"))
-              .build();
-      llCorner =
-          ModelRenderable.builder()
-              .setSource(context, Uri.parse("models/frame_lower_left.sfb"))
-              .build();
-      lrCorner =
-          ModelRenderable.builder()
-              .setSource(context, Uri.parse("models/frame_lower_right.sfb"))
-              .build();
-
-
-    }
+//    if (ulCorner == null) {
+//      ulCorner =
+//          ModelRenderable.builder()
+//              .setSource(context, Uri.parse("models/frame_upper_left.sfb"))
+//              .build();
+//      urCorner =
+//          ModelRenderable.builder()
+//              .setSource(context, Uri.parse("models/frame_upper_right.sfb"))
+//              .build();
+//      llCorner =
+//          ModelRenderable.builder()
+//              .setSource(context, Uri.parse("models/frame_lower_left.sfb"))
+//              .build();
+//      lrCorner =
+//          ModelRenderable.builder()
+//              .setSource(context, Uri.parse("models/frame_lower_right.sfb"))
+//              .build();
+//
+//
+//    }
 
 //    CGUImageRenderable=ViewRenderable.builder().setSizer(new FixedWidthViewSizer(0.5f)).setView(context,R.layout.cguimage).build();
 //    CGUListRebderable=ViewRenderable.builder().setSizer(new FixedWidthViewSizer(0.25f)).setView(context,R.layout.cgulist).build();
@@ -167,14 +167,14 @@ public class AugmentedImageNode extends AnchorNode {
   public void setImage(AugmentedImage image,String Name) {
       this.Name=Name;
     // If any of the models are not loaded, then recurse when all are loaded.
-    if (!ulCorner.isDone() || !urCorner.isDone() || !llCorner.isDone() || !lrCorner.isDone()) {
-      CompletableFuture.allOf(ulCorner, urCorner, llCorner, lrCorner)
-          .thenAccept((Void aVoid) -> setImage(image,Name))
-          .exceptionally(
-              throwable -> {
-                return null;
-              });
-    }
+//    if (!ulCorner.isDone() || !urCorner.isDone() || !llCorner.isDone() || !lrCorner.isDone()) {
+//      CompletableFuture.allOf(ulCorner, urCorner, llCorner, lrCorner)
+//          .thenAccept((Void aVoid) -> setImage(image,Name))
+//          .exceptionally(
+//              throwable -> {
+//                return null;
+//              });
+//    }
       IndustryTagRenderable.thenAccept(
               (Renderable) -> {
                   IndustryTag = Renderable.getView();
