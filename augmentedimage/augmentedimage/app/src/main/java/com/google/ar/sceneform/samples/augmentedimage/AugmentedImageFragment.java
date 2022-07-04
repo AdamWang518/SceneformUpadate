@@ -70,17 +70,17 @@ public class AugmentedImageFragment extends ArFragment {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
       Log.e(TAG, "Sceneform requires Android N or later");
       SnackbarHelper.getInstance()
-          .showError(getActivity(), "Sceneform requires Android N or later");
+              .showError(getActivity(), "Sceneform requires Android N or later");
     }
 
     String openGlVersionString =
-        ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
-            .getDeviceConfigurationInfo()
-            .getGlEsVersion();
+            ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
+                    .getDeviceConfigurationInfo()
+                    .getGlEsVersion();
     if (Double.parseDouble(openGlVersionString) < MIN_OPENGL_VERSION) {
       Log.e(TAG, "Sceneform requires OpenGL ES 3.0 or later");
       SnackbarHelper.getInstance()
-          .showError(getActivity(), "Sceneform requires OpenGL ES 3.0 or later");
+              .showError(getActivity(), "Sceneform requires OpenGL ES 3.0 or later");
     }
   }
 
@@ -90,21 +90,21 @@ public class AugmentedImageFragment extends ArFragment {
     View view = super.onCreateView(inflater, container, savedInstanceState);
 
     // Turn off the plane discovery since we're only looking for images
-    getPlaneDiscoveryController().hide();
-    getPlaneDiscoveryController().setInstructionView(null);
+//    getPlaneDiscoveryController().hide();
+//    getPlaneDiscoveryController().setInstructionView(null);
     getArSceneView().getPlaneRenderer().setEnabled(false);
     return view;
   }
 
-  @Override
-  protected Config getSessionConfiguration(Session session) {
-    Config config = super.getSessionConfiguration(session);
-    if (!setupAugmentedImageDatabase(config, session)) {
-      SnackbarHelper.getInstance()
-          .showError(getActivity(), "Could not setup augmented image database");
-    }
-    return config;
-  }
+//  @Override
+//  protected Config getSessionConfiguration(Session session) {
+//    Config config = super.getSessionConfiguration(session);
+//    if (!setupAugmentedImageDatabase(config, session)) {
+//      SnackbarHelper.getInstance()
+//              .showError(getActivity(), "Could not setup augmented image database");
+//    }
+//    return config;
+//  }
 
   private boolean setupAugmentedImageDatabase(Config config, Session session) {
     AugmentedImageDatabase augmentedImageDatabase;

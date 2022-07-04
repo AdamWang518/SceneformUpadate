@@ -142,11 +142,11 @@ public  class AugmentedImageActivity extends AppCompatActivity {
 
 //
 //
-    private void onUpdateFrame(FrameTime frameTime) {//反覆被呼叫
-      Log.d("leolog","Detecting");
-      if(isImageDetected) {
-        return;
-      }
+  private void onUpdateFrame(FrameTime frameTime) {//反覆被呼叫
+    Log.d("leolog","Detecting");
+    if(isImageDetected) {
+      return;
+    }
     Frame frame = arFragment.getArSceneView().getArFrame();
     Log.d("leolog","OnUpdateFrame");
     // If there is no frame, just return.
@@ -155,7 +155,7 @@ public  class AugmentedImageActivity extends AppCompatActivity {
     }
 
     Collection<AugmentedImage> updatedAugmentedImages =
-        frame.getUpdatedTrackables(AugmentedImage.class);
+            frame.getUpdatedTrackables(AugmentedImage.class);
     for (AugmentedImage augmentedImage : updatedAugmentedImages) {
       SnackbarHelper.getInstance().showMessage(this, augmentedImage.getTrackingState().toString());
       //Log.d("leolog",augmentedImage.getTrackingState().toString());
@@ -171,7 +171,7 @@ public  class AugmentedImageActivity extends AppCompatActivity {
         case TRACKING:
           // Have to switch to UI Thread to update View.
 
-         //搞懂如何反覆投放
+          //搞懂如何反覆投放
           if (!augmentedImageMap.containsKey(augmentedImage)) {
             //node = new AugmentedImageNode(this);
             this.image = augmentedImage;
@@ -206,7 +206,7 @@ public  class AugmentedImageActivity extends AppCompatActivity {
       Map.Entry<AugmentedImage, AugmentedImageNode> entry = iter.next();
       AugmentedImageNode faceNode = entry.getValue();
       faceNode.setParent(null);
-     
+
       iter.remove();
       augmentedImageMap.remove(this.image);
       arFragment.getArSceneView().getScene().removeChild(faceNode);
@@ -241,7 +241,7 @@ public  class AugmentedImageActivity extends AppCompatActivity {
 //    }
 ////////////// cancel end////////
     // augmentedImageMap.remove(this.image);  => 用來判定物件生成的所在位置的圖片，若把圖片清空的話，物件就無法被放入，可以從這邊觀察下手，想辦法讓他能重新識別
-  // 想辦法如何再把其他圖片放入，讓物件能重新擺上去
+    // 想辦法如何再把其他圖片放入，讓物件能重新擺上去
 //    fitToScanView.setVisibility(View.VISIBLE);
 //
 //    Iterator<Map.Entry<AugmentedImage, AugmentedImageNode>> iter =
@@ -303,11 +303,11 @@ public  class AugmentedImageActivity extends AppCompatActivity {
 
   }
 
-    public void restart(View view) {
-      Intent intent = getIntent();
-      finish();
-      startActivity(intent);
-    }
+  public void restart(View view) {
+    Intent intent = getIntent();
+    finish();
+    startActivity(intent);
+  }
 
   public void send(View view) {
     show.dismiss();

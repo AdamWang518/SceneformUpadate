@@ -15,13 +15,13 @@
  apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.google.ar.sceneform.samples.augmentedimage"
 
         // Sceneform requires minSdkVersion >= 24.
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -31,6 +31,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -41,46 +42,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude 'META-INF/kotlinx_coroutines_core.version'
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'org.jetbrains:annotations:15.0'
     // Use the Sceneform UX Package pre-built from Maven.
-    compile 'com.github.markushi:circlebutton:1.1'
-    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.17.1"
+    implementation 'com.github.markushi:circlebutton:1.1'
+    implementation "com.gorisse.thomas.sceneform:sceneform:1.21.0"
+
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    compile 'com.github.bumptech.glide:glide:3.6.1'
-    compile 'com.mcxiaoke.volley:library:1.0.+'
+    implementation 'com.github.bumptech.glide:glide:3.6.1'
+    implementation 'com.mcxiaoke.volley:library:1.0.+'
     // Use the Sceneform UX Package built from the source files included in the sceneformux folder.
     //api project(":sceneformux")
 }
 
-apply plugin: 'com.google.ar.sceneform.plugin'
-
-sceneform.asset('sampledata/models/house.obj',
-        'default',
-        'sampledata/models/house.sfa',
-        'src/main/assets/models/house')
-sceneform.asset('sampledata/models/frame_lower_left.obj',
-        'default',
-        'sampledata/models/frame_lower_left.sfa',
-        'src/main/assets/models/frame_lower_left')
-
-
-sceneform.asset('sampledata/models/frame_lower_right.obj',
-        'default',
-        'sampledata/models/frame_lower_right.sfa',
-        'src/main/assets/models/frame_lower_right')
-
-sceneform.asset('sampledata/models/frame_upper_left.obj',
-        'default',
-        'sampledata/models/frame_upper_left.sfa',
-        'src/main/assets/models/frame_upper_left')
-
-sceneform.asset('sampledata/models/frame_upper_right.obj',
-        'default',
-        'sampledata/models/frame_upper_right.sfa',
-        'src/main/assets/models/frame_upper_right')
