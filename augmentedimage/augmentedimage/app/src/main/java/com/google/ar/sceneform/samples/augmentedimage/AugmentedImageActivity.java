@@ -16,7 +16,13 @@
 
 package com.google.ar.sceneform.samples.augmentedimage;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
@@ -27,8 +33,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentOnAttachListener;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -37,7 +47,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.AugmentedImage;
+import com.google.ar.core.AugmentedImageDatabase;
+import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
+import com.google.ar.core.Session;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.samples.ModelAction.DepartmentAdapter;
@@ -45,12 +58,15 @@ import com.google.ar.sceneform.samples.ModelAction.buildingAdapter;
 import com.google.ar.sceneform.samples.Models.buildingModel;
 import com.google.ar.sceneform.samples.common.helpers.SnackbarHelper;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.ux.BaseArFragment;
 
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,6 +86,23 @@ import java.util.Map;
  * Images</a>.
  */
 public  class AugmentedImageActivity extends AppCompatActivity {
+  private static final String TAG = "AugmentedImageFragment";
+
+  // This is the name of the image in the sample database.  A copy of the image is in the assets
+  // directory.  Opening this image on your computer is a good quick way to test the augmented image
+  // matching.
+  private static final String DEFAULT_IMAGE_NAME = "medical.png";
+
+  // This is a pre-created database containing the sample image.
+  private static final String SAMPLE_IMAGE_DATABASE = "Images.imgdb";//要有對比色
+
+  // Augmented image configuration and rendering.
+  // Load a single image (true) or a pre-generated image database (false).
+  private static final boolean USE_SINGLE_IMAGE = false;
+
+  // Do a runtime check for the OpenGL level available at runtime to avoid Sceneform crashing the
+  // application.
+  private static final double MIN_OPENGL_VERSION = 3.0;
 
   private ArFragment arFragment;
   private int SPEECH_REQUEST_CODE = 0;
@@ -91,6 +124,8 @@ public  class AugmentedImageActivity extends AppCompatActivity {
     this.mQueue = Volley.newRequestQueue(this);
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
 
+    //arFragment.getArSceneView().getPlaneRenderer().setEnabled(false);
+    //getSupportFragmentManager().addFragmentOnAttachListener(this);
     scene = arFragment.getArSceneView().getScene();
     node = new AugmentedImageNode(this);
 
@@ -361,4 +396,55 @@ public  class AugmentedImageActivity extends AppCompatActivity {
 
 
   }
+  private boolean setupAugmentedImageDatabase(Config config, Session session) {
+    AugmentedImageDatabase augmentedImageDatabase;
+
+    AssetManager assetManager = this != null ? this.getAssets() : null;
+    if (assetManager == null) {
+      Log.e(TAG, "Context is null, cannot intitialize image database.");
+      return false;
+    }
+
+    // There are two ways to configure an AugmentedImageDatabase:
+    // 1. Add Bitmap to DB directly
+    // 2. Load a pre-built AugmentedImageDatabase
+    // Option 2) has
+    // * shorter setup time
+    // * doesn't require images to be packaged in apk.
+    if (USE_SINGLE_IMAGE) {
+      Bitmap augmentedImageBitmap = loadAugmentedImageBitmap(assetManager);
+      if (augmentedImageBitmap == null) {
+        return false;
+      }
+
+      augmentedImageDatabase = new AugmentedImageDatabase(session);
+      augmentedImageDatabase.addImage(DEFAULT_IMAGE_NAME, augmentedImageBitmap);
+      // If the physical size of the image is known, you can instead use:
+      //     augmentedImageDatabase.addImage("image_name", augmentedImageBitmap, widthInMeters);
+      // This will improve the initial detection speed. ARCore will still actively estimate the
+      // physical size of the image as it is viewed from multiple viewpoints.
+    } else {
+      // This is an alternative way to initialize an AugmentedImageDatabase instance,
+      // load a pre-existing augmented image database.
+      try (InputStream is = this.getAssets().open(SAMPLE_IMAGE_DATABASE)) {
+        augmentedImageDatabase = AugmentedImageDatabase.deserialize(session, is);
+      } catch (IOException e) {
+        Log.e(TAG, "IO exception loading augmented image database.", e);
+        return false;
+      }
+    }
+
+    config.setAugmentedImageDatabase(augmentedImageDatabase);
+    return true;
+  }
+
+  private Bitmap loadAugmentedImageBitmap(AssetManager assetManager) {
+    try (InputStream is = assetManager.open(DEFAULT_IMAGE_NAME)) {
+      return BitmapFactory.decodeStream(is);
+    } catch (IOException e) {
+      Log.e(TAG, "IO exception loading augmented image bitmap.", e);
+    }
+    return null;
+  }
+
 }

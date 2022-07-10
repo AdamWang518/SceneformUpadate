@@ -57,7 +57,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    implementation 'com.github.bumptech.glide:glide:3.6.1'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.mcxiaoke.volley:library:1.0.+'
     // Use the Sceneform UX Package built from the source files included in the sceneformux folder.
     //api project(":sceneformux")

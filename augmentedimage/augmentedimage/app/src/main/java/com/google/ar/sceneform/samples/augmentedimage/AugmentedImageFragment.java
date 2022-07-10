@@ -29,20 +29,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentOnAttachListener;
 
 import com.google.ar.core.AugmentedImageDatabase;
 import com.google.ar.core.Config;
 import com.google.ar.core.Session;
 import com.google.ar.sceneform.samples.common.helpers.SnackbarHelper;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.ux.BaseArFragment;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Extend the ArFragment to customize the ARCore session configuration to include Augmented Images.
  */
-public class AugmentedImageFragment extends ArFragment {
+public class AugmentedImageFragment extends ArFragment implements
+        FragmentOnAttachListener,
+        BaseArFragment.OnSessionConfigurationListener{
   private static final String TAG = "AugmentedImageFragment";
 
   // This is the name of the image in the sample database.  A copy of the image is in the assets
@@ -64,7 +72,7 @@ public class AugmentedImageFragment extends ArFragment {
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-
+    Log.d("attach","attach");
     // Check for Sceneform being supported on this device.  This check will be integrated into
     // Sceneform eventually.
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
@@ -82,6 +90,8 @@ public class AugmentedImageFragment extends ArFragment {
       SnackbarHelper.getInstance()
               .showError(getActivity(), "Sceneform requires OpenGL ES 3.0 or later");
     }
+
+
   }
 
   @Override
@@ -92,9 +102,13 @@ public class AugmentedImageFragment extends ArFragment {
     // Turn off the plane discovery since we're only looking for images
 //    getPlaneDiscoveryController().hide();
 //    getPlaneDiscoveryController().setInstructionView(null);
+    Log.d("Create","turnoff");
     getArSceneView().getPlaneRenderer().setEnabled(false);
+    setOnSessionConfigurationListener(this);
     return view;
   }
+
+
 
 //  @Override
 //  protected Config getSessionConfiguration(Session session) {
@@ -157,4 +171,34 @@ public class AugmentedImageFragment extends ArFragment {
     return null;
   }
 
+  @Override
+  public void onAttachFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment) {
+    Log.d("onAttach","onAttach");
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+      Log.e(TAG, "Sceneform requires Android N or later");
+      SnackbarHelper.getInstance()
+              .showError(getActivity(), "Sceneform requires Android N or later");
+    }
+
+    String openGlVersionString =
+            ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE))
+                    .getDeviceConfigurationInfo()
+                    .getGlEsVersion();
+    if (Double.parseDouble(openGlVersionString) < MIN_OPENGL_VERSION) {
+      Log.e(TAG, "Sceneform requires OpenGL ES 3.0 or later");
+      SnackbarHelper.getInstance()
+              .showError(getActivity(), "Sceneform requires OpenGL ES 3.0 or later");
+    }
+  }
+
+  @Override
+  public void onSessionConfiguration(Session session, Config config) {
+    Log.d("Session","disable");
+    session.getConfig().setPlaneFindingMode(Config.PlaneFindingMode.DISABLED);
+    if (!setupAugmentedImageDatabase(config, session)) {
+      SnackbarHelper.getInstance()
+              .showError(getActivity(), "Could not setup augmented image database");
+    }
+  }
 }
