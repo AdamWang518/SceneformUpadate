@@ -26,6 +26,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +39,8 @@ import androidx.fragment.app.FragmentOnAttachListener;
 import com.google.ar.core.AugmentedImageDatabase;
 import com.google.ar.core.Config;
 import com.google.ar.core.Session;
+import com.google.ar.sceneform.rendering.PlaneRenderer;
+import com.google.ar.sceneform.rendering.Renderer;
 import com.google.ar.sceneform.samples.common.helpers.SnackbarHelper;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.BaseArFragment;
@@ -104,6 +107,8 @@ public class AugmentedImageFragment extends ArFragment implements
 //    getPlaneDiscoveryController().setInstructionView(null);
     Log.d("Create","turnoff");
     getArSceneView().getPlaneRenderer().setEnabled(false);
+    getArSceneView().getPlaneRenderer().setVisible(false);
+    getArSceneView().getPlaneRenderer().setShadowReceiver(false);
     setOnSessionConfigurationListener(this);
     return view;
   }
@@ -195,7 +200,9 @@ public class AugmentedImageFragment extends ArFragment implements
   @Override
   public void onSessionConfiguration(Session session, Config config) {
     Log.d("Session","disable");
+    getArSceneView().getPlaneRenderer().setEnabled(false);
     session.getConfig().setPlaneFindingMode(Config.PlaneFindingMode.DISABLED);
+
     if (!setupAugmentedImageDatabase(config, session)) {
       SnackbarHelper.getInstance()
               .showError(getActivity(), "Could not setup augmented image database");
