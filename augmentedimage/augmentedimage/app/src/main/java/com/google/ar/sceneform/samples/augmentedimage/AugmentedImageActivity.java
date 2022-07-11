@@ -123,7 +123,6 @@ public  class AugmentedImageActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     this.mQueue = Volley.newRequestQueue(this);
     arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
-
     //arFragment.getArSceneView().getPlaneRenderer().setEnabled(false);
     //getSupportFragmentManager().addFragmentOnAttachListener(this);
     scene = arFragment.getArSceneView().getScene();

@@ -54,10 +54,16 @@ public class Navigation {
         medical2Tag.setVisibility(View.INVISIBLE);
         manageTag.setVisibility(View.INVISIBLE);
 
-        manageroad.setVisibility(View.INVISIBLE);
-        medical1road.setVisibility(View.INVISIBLE);
-        medical2road.setVisibility(View.INVISIBLE);
-        industryroad.setVisibility(View.INVISIBLE);
+
+        manageroad.setVisibility(View.VISIBLE);
+        medical1road.setVisibility(View.VISIBLE);
+        medical2road.setVisibility(View.VISIBLE);
+        industryroad.setVisibility(View.VISIBLE);
+
+//        manageroad.setVisibility(View.INVISIBLE);
+//        medical1road.setVisibility(View.INVISIBLE);
+//        medical2road.setVisibility(View.INVISIBLE);
+//        industryroad.setVisibility(View.INVISIBLE);
     }
     public AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
         @Override

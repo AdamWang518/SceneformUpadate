@@ -44,6 +44,7 @@ import com.google.ar.sceneform.rendering.Renderer;
 import com.google.ar.sceneform.samples.common.helpers.SnackbarHelper;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.BaseArFragment;
+import com.google.ar.sceneform.ux.InstructionsController;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,6 +107,7 @@ public class AugmentedImageFragment extends ArFragment implements
 //    getPlaneDiscoveryController().hide();
 //    getPlaneDiscoveryController().setInstructionView(null);
     Log.d("Create","turnoff");
+    getInstructionsController().setEnabled(false);
     getArSceneView().getPlaneRenderer().setEnabled(false);
     getArSceneView().getPlaneRenderer().setVisible(false);
     getArSceneView().getPlaneRenderer().setShadowReceiver(false);

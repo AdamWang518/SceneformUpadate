@@ -264,6 +264,8 @@ public class AugmentedImageNode extends AnchorNode {
             setRoadRenderable(MedicalTwoRoadRenderable,-1f * 0.13f,0f,3.25f * 0.13f);//ok
             setRoadRenderable(IndustryRoadRenderable,-0.4f* 0.13f,0f,2.5f * 0.13f);//ok
             setRoadRenderable(ManageRoadRenderable,-0.25f* 0.13f,0f,2.4f * 0.13f);
+
+
             Log.d("NavigationImage","Navigation");
         }
         else if(Name.equals("game.png"))
